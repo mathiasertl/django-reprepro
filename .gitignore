@@ -5,3 +5,4 @@ local/
 *.pyc
 *.swp
 *.swo
+db.sqlite3
