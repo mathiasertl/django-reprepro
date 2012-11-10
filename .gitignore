@@ -6,3 +6,4 @@ local/
 *.swp
 *.swo
 db.sqlite3
+packagearchive/localsettings.py
