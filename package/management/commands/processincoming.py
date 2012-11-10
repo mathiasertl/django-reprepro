@@ -35,12 +35,17 @@ class Command(BaseCommand):
         srcpkg = pkg['Source']
         if srcpkg in self.src_handled[dist]:
             args += ['-T', 'deb']
+            package = self.src_handled[dist][srcpkg]
         else:
-            self.src_handled[dist][srcpkg] = True
+            package = Package.objects.get_or_create(name=srcpkg)[0]
+            self.src_handled[dist][srcpkg] = package
 
-        #TODO: get real list of components
-        components = ['all']
-        args += ['-C', '|'.join(components)]
+        # get list of components
+        if package.all_components:
+            components = Component.objects.filter(distribution__name=dist)
+        else:
+            components = package.components.filter(distribution__name=dist)
+        args += ['-C', '|'.join(components.values_list('name', flat=True))]
 
         # add final include command:
         args += ['include', dist, changesfile]

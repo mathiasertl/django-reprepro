@@ -3,19 +3,30 @@
         "pk": 1, 
         "model": "package.package", 
         "fields": {
-            "name": "apt-cacher-ng", 
             "components": [
                 1, 
                 2
-            ]
+            ], 
+            "name": "apt-cacher-ng", 
+            "all_components": false
         }
     }, 
     {
         "pk": 2, 
         "model": "package.package", 
         "fields": {
+            "components": [], 
             "name": "fsinf-keyring", 
-            "components": []
+            "all_components": true
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "package.package", 
+        "fields": {
+            "components": [], 
+            "name": "fsinf-server-config", 
+            "all_components": false
         }
     }, 
     {
