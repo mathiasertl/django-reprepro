@@ -1,14 +1,20 @@
 import os
-import subprocess
 import sys
+
+from subprocess import Popen, PIPE
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+
+from distribution.models import Distribution
+
+from incoming.models import IncomingDirectory
 
 from package.models import Package
 from package.util import SourcePackage, BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--distdir=+b/dists/']
+
 
 class Command(BaseCommand):
     args = ''
@@ -41,13 +47,12 @@ class Command(BaseCommand):
 
         # actually execute:
         print(' '.join(args))
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         if p.returncode != 0:
             print('   ... RETURN CODE: %s' % p.returncode)
             print('   ... STDOUT: %s' % stdout)
             print('   ... STDERR: %s' % stderr)
-
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
@@ -61,17 +66,29 @@ class Command(BaseCommand):
             except RuntimeError as e:
                 self.err(e)
 
+    def handle_incoming(self, incoming):
+        # A few safety checks:
+        if not os.path.exists(incoming.location):
+            self.err("%s: No such directory." % incoming.location)
+            return
+        if not os.path.isdir(incoming.location):
+            self.err("%s: Not a directory." % incoming.location)
+            return
+
+        location = os.path.abspath(incoming.location)
+
+        for dirname in sorted(os.path.listdir(location)):
+            path = os.path.join(location, dirname)
+            if not os.path.isdir(path) or '-' not in path:
+                continue
+            self.handle_directory(path)
+
     def handle(self, *args, **options):
         self.basedir = os.path.abspath(
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
-        self.srcdir = os.path.abspath(
-            options.get('srcdir', getattr(settings, 'APT_SRCDIR', '.')))
         self.src_handled = {}
 
-        for dirname in sorted(os.listdir(self.srcdir)):
-            path = os.path.join(self.srcdir, dirname)
-            if not os.path.isdir(path) or '-' not in path:
-                continue
+        directories = IncomingDirectory.objects.filter(enabled=True)
 
-            self.handle_directory(path)
-
+        for directory in directories.order_by('location'):
+            self.handle_incoming(directory)
