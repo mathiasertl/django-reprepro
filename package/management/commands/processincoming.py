@@ -1,6 +1,7 @@
 import os
 import sys
 
+from optparse import make_option
 from subprocess import Popen, PIPE
 
 from django.conf import settings
@@ -19,6 +20,19 @@ BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--distdir=+b/dists/']
 class Command(BaseCommand):
     args = ''
     help = 'Process incoming files'
+
+    option_list = BaseCommand.option_list + (
+        make_option('--dry-run',
+            action='store_true',
+            default=False,
+            help="Don't really add any files"
+        ),
+        make_option('--verbose',
+            action='store_true',
+            default=False,
+            help="Don't really add any files"
+        ),
+    )
 
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
@@ -54,14 +68,15 @@ class Command(BaseCommand):
         args += ['include', dist, changesfile]
 
         # actually execute:
-        print(' '.join(args))
-        return
-        p = Popen(args, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate()
-        if p.returncode != 0:
-            print('   ... RETURN CODE: %s' % p.returncode)
-            print('   ... STDOUT: %s' % stdout)
-            print('   ... STDERR: %s' % stderr)
+        if self.verbose:
+            print(' '.join(args))
+        if not self.dry:
+            p = Popen(args, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+            if p.returncode != 0:
+                self.err('   ... RETURN CODE: %s' % p.returncode)
+                self.err('   ... STDOUT: %s' % stdout)
+                self.err('   ... STDERR: %s' % stderr)
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
@@ -93,6 +108,8 @@ class Command(BaseCommand):
             self.handle_directory(path)
 
     def handle(self, *args, **options):
+        self.verbose = options['verbose']
+        self.dry = options['dry_run']
         self.basedir = os.path.abspath(
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
         self.src_handled = {}
