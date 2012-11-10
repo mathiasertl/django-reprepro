@@ -36,7 +36,7 @@ class Command(BaseCommand):
         if srcpkg in self.src_handled[dist]:
             args += ['-T', 'deb']
         else:
-            self.src_handled[dist].append(srcpkg)
+            self.src_handled[dist][srcpkg] = True
 
         #TODO: get real list of components
         components = ['all']
@@ -59,7 +59,7 @@ class Command(BaseCommand):
         dist, arch = os.path.basename(path).split('-', 1)
 
         if dist not in self.src_handled:
-            self.src_handled[dist] = []
+            self.src_handled[dist] = {}
 
         for f in [f for f in os.listdir(path) if f.endswith('.changes')]:
             try:
