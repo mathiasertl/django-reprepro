@@ -45,7 +45,10 @@ class Command(BaseCommand):
             components = Component.objects.filter(distribution__name=dist)
         else:
             components = package.components.filter(distribution__name=dist)
-        args += ['-C', '|'.join(components.values_list('name', flat=True))]
+        components = list(components.values_list('name', flat=True))
+        if len(components) == 0:
+            return  # no components found, exiting
+        args += ['-C', '|'.join(components)]
 
         # add final include command:
         args += ['include', dist, changesfile]
