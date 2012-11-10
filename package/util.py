@@ -25,6 +25,17 @@ class Package(dict):
                 last_field = field
                 self[field] = value
 
+    def get_files(self):
+        if 'Files' in self:
+            raw = self.get('Files')
+        else:
+            raw = self.get([k for k in self.keys() if k.startswith('Checksums')][0])
+
+        files = []
+        for line in raw.split("\n"):
+            files.append(line.split()[-1])
+
+        return files
 
 class SourcePackage(Package):
     pass
