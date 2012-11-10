@@ -8,13 +8,13 @@ VENDORS = (
 )
 
 class Component(models.Model):
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=16, unique=True)
 
     def __unicode__(self):
         return self.name
 
 class Distribution(models.Model):
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
 
     components = models.ManyToManyField(Component)
