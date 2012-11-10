@@ -8,3 +8,6 @@ class Package(models.Model):
     all_components = models.BooleanField(default=False)
 
     components = models.ManyToManyField(Component)
+
+    def __unicode__(self):
+        return self.name
