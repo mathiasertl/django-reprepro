@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'distribution',
+    'incoming',
     'package',
 )
 
