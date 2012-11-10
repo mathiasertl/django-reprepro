@@ -35,10 +35,10 @@ class Command(BaseCommand):
         srcpkg = pkg['Source']
         if srcpkg in self.src_handled[dist]:
             args += ['-T', 'deb']
-            package = self.src_handled[dist][srcpkg]
         else:
-            package = Package.objects.get_or_create(name=srcpkg)[0]
-            self.src_handled[dist][srcpkg] = package
+            self.src_handled[dist][srcpkg] = Package.objects.get_or_create(
+                name=srcpkg)[0]
+        package = self.src_handled[dist][srcpkg]
 
         # get list of components
         if package.all_components:
