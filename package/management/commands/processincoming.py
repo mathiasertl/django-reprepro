@@ -47,6 +47,7 @@ class Command(BaseCommand):
 
         # actually execute:
         print(' '.join(args))
+        return
         p = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         if p.returncode != 0:
@@ -77,7 +78,7 @@ class Command(BaseCommand):
 
         location = os.path.abspath(incoming.location)
 
-        for dirname in sorted(os.path.listdir(location)):
+        for dirname in sorted(os.listdir(location)):
             path = os.path.join(location, dirname)
             if not os.path.isdir(path) or '-' not in path:
                 continue
