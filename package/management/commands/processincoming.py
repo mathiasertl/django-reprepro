@@ -11,8 +11,8 @@ from package.util import SourcePackage, BinaryPackage
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--distdir=+b/dists/']
 
 class Command(BaseCommand):
-    args = '<poll_id poll_id ...>'
-    help = 'Closes the specified poll for voting'
+    args = ''
+    help = 'Process incoming files'
 
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
