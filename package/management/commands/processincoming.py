@@ -73,10 +73,27 @@ class Command(BaseCommand):
         if not self.dry:
             p = Popen(args, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate()
-            if p.returncode != 0:
+            if p.returncode == 0:
+                # remove changes files and the files referenced:
+                basedir = os.path.dirname(changesfile)
+                for filename in pkg.get_files():
+                    fullpath = os.path.join(basedir, filename)
+                    if self.verbose:
+                        print('rm %s' % fullpath)
+                    os.remove(fullpath)
+
+                if self.verbose:
+                    print('rm %s' % changesfile)
+                os.remove(changesfile)
+            else:
                 self.err('   ... RETURN CODE: %s' % p.returncode)
                 self.err('   ... STDOUT: %s' % stdout)
                 self.err('   ... STDERR: %s' % stderr)
+        else:
+            basedir = os.path.dirname(changesfile)
+            for filename in pkg.get_files():
+                print('rm %s' % os.path.join(basedir, filename))
+            print('rm %s' % changesfile)
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
