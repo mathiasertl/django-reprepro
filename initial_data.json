@@ -1,0 +1,279 @@
+[
+    {
+        "pk": 1, 
+        "model": "package.package", 
+        "fields": {
+            "name": "apt-cacher-ng", 
+            "components": [
+                1, 
+                2
+            ]
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "package.package", 
+        "fields": {
+            "name": "fsinf-keyring", 
+            "components": []
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "all"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "fsinf"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "restauth"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "spectrum"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "spectrum2"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "gajim"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "lenny", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "squeeze", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "wheezy", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "hardy", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "jaunty", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "intrepid", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "karmic", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "lucid", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "maverick", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "natty", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "oneiric", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "precise", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "distribution.distribution", 
+        "fields": {
+            "vendor": 0, 
+            "name": "quantal", 
+            "components": [
+                1, 
+                2, 
+                3, 
+                4, 
+                5, 
+                6
+            ]
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "incoming.incomingdirectory", 
+        "fields": {
+            "enabled": true, 
+            "location": "/home/mati/incoming/"
+        }
+    }
+]
