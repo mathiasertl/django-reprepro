@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from distribution.models import Distribution
+from distribution.models import Distribution, Component
 
 from incoming.models import IncomingDirectory
 
@@ -109,7 +109,7 @@ class Command(BaseCommand):
             if self.verbose:
                 print('rm %s' % changesfile)
             os.remove(changesfile)
-        else:
+        elif self.dry:
             basedir = os.path.dirname(changesfile)
             for filename in pkg.get_files():
                 print('rm %s' % os.path.join(basedir, filename))
