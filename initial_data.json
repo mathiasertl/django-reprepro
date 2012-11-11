@@ -24,8 +24,155 @@
         "pk": 3, 
         "model": "package.package", 
         "fields": {
-            "components": [], 
+            "components": [
+                1, 
+                2
+            ], 
             "name": "fsinf-server-config", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "php-phpdocumentor", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                7
+            ], 
+            "name": "ejabberd", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "restauth", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "restauth-common", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                2
+            ], 
+            "name": "cga-backup", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                2
+            ], 
+            "name": "db-backup", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                7
+            ], 
+            "name": "erlang-xmlrpc", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                2
+            ], 
+            "name": "iptables-fsinf", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                2
+            ], 
+            "name": "munin-fsinf-plugins", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "python-restauth", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "python-django", 
+            "all_components": false
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "package.package", 
+        "fields": {
+            "components": [
+                1, 
+                3
+            ], 
+            "name": "python-django-south", 
             "all_components": false
         }
     }, 
@@ -69,6 +216,13 @@
         "model": "distribution.component", 
         "fields": {
             "name": "gajim"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "distribution.component", 
+        "fields": {
+            "name": "jabber"
         }
     }, 
     {
