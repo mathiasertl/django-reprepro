@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 from optparse import make_option
 from subprocess import Popen, PIPE
@@ -14,7 +15,7 @@ from incoming.models import IncomingDirectory
 from package.models import Package
 from package.util import SourcePackage, BinaryPackage
 
-BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--distdir=+b/dists/']
+BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/',]# '--distdir=+b/dists/']
 
 
 class Command(BaseCommand):
@@ -37,13 +38,26 @@ class Command(BaseCommand):
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
 
+    def add_changesfile(self, cmd, dist, component, changesfile):
+        cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
+
+        # actually execute:
+        if self.verbose:
+            print(' '.join(cmd))
+        if not self.dry:
+            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+            return p.returncode, stdout, stderr
+        else:
+            return 0, '', ''  # return dummy values
+
     def handle_changesfile(self, changesfile, dist):
         pkg = BinaryPackage(changesfile)
         pkg.parse()
 
         args = BASE_ARGS + [
-            '--outdir=+b/%s/' % dist,
-            '--dbdir=+o/db/',
+#            '--outdir=+b/dists/pool/%s/' % dist,
+#            '--dbdir=+b/db/%s/' % dist,
         ]
 
         srcpkg = pkg['Source']
@@ -61,34 +75,40 @@ class Command(BaseCommand):
             components = package.components.filter(distribution__name=dist)
         components = list(components.values_list('name', flat=True))
         if len(components) == 0:
-            return  # no components found, exiting
-        args += ['-C', '|'.join(components)]
+            base = os.path.basename(changesfile)
+            self.err('%s: Not added because no components were found' % base)
+            return  # no components found, not adding
 
-        # add final include command:
-        args += ['include', dist, changesfile]
-
-        # actually execute:
-        if self.verbose:
-            print(' '.join(args))
-        if not self.dry:
-            p = Popen(args, stdout=PIPE, stderr=PIPE)
-            stdout, stderr = p.communicate()
-            if p.returncode == 0:
-                # remove changes files and the files referenced:
-                basedir = os.path.dirname(changesfile)
-                for filename in pkg.get_files():
-                    fullpath = os.path.join(basedir, filename)
-                    if self.verbose:
-                        print('rm %s' % fullpath)
-                    os.remove(fullpath)
-
-                if self.verbose:
-                    print('rm %s' % changesfile)
-                os.remove(changesfile)
+        for i in range(1, 5):
+            if pkg.exists():
+                break
             else:
-                self.err('   ... RETURN CODE: %s' % p.returncode)
+                if self.verbose:
+                    self.err('%s: Not all files exist, try again in 5 seconds...' % changesfile)
+                time.sleep(5)
+
+        totalcode = 0
+        for component in components:
+            code, stdout, stderr = self.add_changesfile(args, dist, component, pkg)
+            totalcode += code
+
+            if code != 0:
+                self.err('   ... RETURN CODE: %s' % code)
                 self.err('   ... STDOUT: %s' % stdout)
                 self.err('   ... STDERR: %s' % stderr)
+
+        if totalcode == 0 and not self.dry:
+            # remove changes files and the files referenced:
+            basedir = os.path.dirname(changesfile)
+            for filename in pkg.get_files():
+                fullpath = os.path.join(basedir, filename)
+                if self.verbose:
+                    print('rm %s' % fullpath)
+                os.remove(fullpath)
+
+            if self.verbose:
+                print('rm %s' % changesfile)
+            os.remove(changesfile)
         else:
             basedir = os.path.dirname(changesfile)
             for filename in pkg.get_files():
