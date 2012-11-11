@@ -1,8 +1,11 @@
+import os
 import gnupg
+
 
 class Package(dict):
     def __init__(self, path):
         self.path = path
+        self.files = None
 
     def parse(self):
         self.data = gnupg.GPG().decrypt_file(open(self.path, 'rb'))
@@ -25,7 +28,22 @@ class Package(dict):
                 last_field = field
                 self[field] = value
 
+    def exists(self):
+        """Check if all files referenced by this package exist."""
+        basedir = os.path.dirname(self.path)
+        self.get_files()
+
+        for filename in self.files:
+            path = os.path.join(basedir, filename)
+            if not os.path.exists(path):
+                return False
+
+        return True
+
     def get_files(self):
+        if self.files is not None:
+            return self.files
+
         if 'Files' in self:
             raw = self.get('Files')
         else:
@@ -35,6 +53,7 @@ class Package(dict):
         for line in raw.split("\n"):
             files.append(line.split()[-1])
 
+        self.files = files
         return files
 
 class SourcePackage(Package):
