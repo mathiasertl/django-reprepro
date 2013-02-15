@@ -2,6 +2,7 @@ bin/
 include/
 lib/
 local/
+share/
 *.pyc
 *.swp
 *.swo
