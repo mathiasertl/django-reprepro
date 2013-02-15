@@ -15,7 +15,7 @@ from incoming.models import IncomingDirectory
 from package.models import Package
 from package.util import SourcePackage, BinaryPackage
 
-BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/',]# '--distdir=+b/dists/']
+BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/',]
 
 
 class Command(BaseCommand):
@@ -33,10 +33,26 @@ class Command(BaseCommand):
             default=False,
             help="Don't really add any files"
         ),
+        make_option('--prerm',
+            default='',
+            help="Coma-seperated list of source packages to remove before "\
+                    "adding them. Necessary for source packages that build"\
+                    "several binary packages with new versions."
+        ),
     )
 
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
+
+    def remove_src_package(self, pkg, dist):
+        #reprepro -b /var/www/apt.fsinf.at/ removesrc wheezy iptables-fsinf
+        cmd = BASE_ARGS + ['removesrc', dist, pkg]
+
+        if self.verbose or self.dry:
+            print(' '.join(cmd))
+        if not self.dry:
+            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
 
     def add_changesfile(self, cmd, dist, component, changesfile):
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
@@ -58,6 +74,7 @@ class Command(BaseCommand):
         args = BASE_ARGS + [
 #            '--outdir=+b/dists/pool/%s/' % dist,
 #            '--dbdir=+b/db/%s/' % dist,
+            '--ignore=wrongsourceversion',
         ]
 
         srcpkg = pkg['Source']
@@ -86,6 +103,10 @@ class Command(BaseCommand):
                 if self.verbose:
                     self.err('%s: Not all files exist, try again in 5 seconds...' % changesfile)
                 time.sleep(5)
+
+        # remove package if requested
+        if srcpkg in self.prerm:
+            self.remove_src_package(pkg=srcpkg, dist=dist)
 
         totalcode = 0
         for component in components:
@@ -149,6 +170,7 @@ class Command(BaseCommand):
         self.dry = options['dry_run']
         self.basedir = os.path.abspath(
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
+        self.prerm = options['prerm'].split(',')
         self.src_handled = {}
 
         directories = IncomingDirectory.objects.filter(enabled=True)
