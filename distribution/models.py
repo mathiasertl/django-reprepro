@@ -9,6 +9,7 @@ VENDORS = (
 
 class Component(models.Model):
     name = models.CharField(max_length=16, unique=True)
+    enabled = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
