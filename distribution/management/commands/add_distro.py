@@ -17,7 +17,14 @@ class Command(BaseCommand):
         for vendor_id, vendor_name in VENDORS:
             if vendor.lower() == vendor_name.lower():
                 vendor = vendor_id
+                break
+        if vendor == args[0]:
+            raise CommandError("Could not find vendor")
 
         # handle distro:
         codename = args[1]
-        dist = Distribution.opjects.create(name=args[0], vendor=vendor_id)
+        dist = Distribution.objects.create(name=codename, vendor=vendor_id)
+
+        # get and add enabled components:
+        components = Component.objects.filter(enabled=True)
+        dist.components.add(*components)
