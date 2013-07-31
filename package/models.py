@@ -9,5 +9,12 @@ class Package(models.Model):
 
     components = models.ManyToManyField(Component)
 
+    # Very useful if binary packages have individual changelogs where
+    # the version is different from the source package version.
+    remove_on_update = models.BooleanField(
+        default=False,
+        help_text="Remove package from index prior to adding a new version of the package."
+    )
+
     def __unicode__(self):
         return self.name
