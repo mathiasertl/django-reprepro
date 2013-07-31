@@ -15,7 +15,7 @@ from incoming.models import IncomingDirectory
 from package.models import Package
 from package.util import SourcePackage, BinaryPackage
 
-BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/',]
+BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
 
 class Command(BaseCommand):
@@ -75,6 +75,7 @@ class Command(BaseCommand):
 #            '--outdir=+b/dists/pool/%s/' % dist,
 #            '--dbdir=+b/db/%s/' % dist,
             '--ignore=wrongsourceversion',
+            '--ignore=wrongversion',
         ]
 
         srcpkg = pkg['Source']
@@ -96,6 +97,8 @@ class Command(BaseCommand):
             self.err('%s: Not added because no components were found' % base)
             return  # no components found, not adding
 
+        # see if all files exist. If not, try a few more times, we might be in
+        # the middle of uploading a new package.
         for i in range(1, 5):
             if pkg.exists():
                 break
@@ -105,7 +108,7 @@ class Command(BaseCommand):
                 time.sleep(5)
 
         # remove package if requested
-        if srcpkg in self.prerm:
+        if srcpkg in self.prerm or package.remove_on_update:
             self.remove_src_package(pkg=srcpkg, dist=dist)
 
         totalcode = 0
