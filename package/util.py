@@ -3,9 +3,28 @@ import gnupg
 
 
 class Package(dict):
+    _parsed = False
+    _files = None
+
     def __init__(self, path):
         self.path = path
-        self.files = None
+
+    @property
+    def files(self):
+        if not self._parsed:
+            self.parse()
+
+        if self._files is None:
+            if 'Files' in self:
+                raw = self.get('Files')
+            else:
+                raw = self.get([k for k in self.keys() if k.startswith('Checksums')][0])
+
+            self._files = []
+            for line in raw.split("\n"):
+                self._files.append(line.split()[-1])
+
+        return self._files
 
     def parse(self):
         self.data = gnupg.GPG().decrypt_file(open(self.path, 'rb'))
@@ -29,10 +48,11 @@ class Package(dict):
                 self[field] = value
         self['Architecture'] = self['Architecture'].split()
 
+        self._parsed=True
+
     def exists(self):
         """Check if all files referenced by this package exist."""
         basedir = os.path.dirname(self.path)
-        self.get_files()
 
         for filename in self.files:
             path = os.path.join(basedir, filename)
@@ -41,21 +61,6 @@ class Package(dict):
 
         return True
 
-    def get_files(self):
-        if self.files is not None:
-            return self.files
-
-        if 'Files' in self:
-            raw = self.get('Files')
-        else:
-            raw = self.get([k for k in self.keys() if k.startswith('Checksums')][0])
-
-        files = []
-        for line in raw.split("\n"):
-            files.append(line.split()[-1])
-
-        self.files = files
-        return files
 
 class SourcePackage(Package):
     pass
