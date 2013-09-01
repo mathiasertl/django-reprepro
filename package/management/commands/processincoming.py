@@ -73,7 +73,7 @@ class Command(BaseCommand):
         cmd = BASE_ARGS + ['removesrc', dist, pkg]
         return self.ex(*cmd)
 
-    def add_changesfile(self, cmd, dist, arch, component, changesfile):
+    def include(self, cmd, dist, component, changesfile):
         """Add a .changes file to the repository."""
 
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
@@ -125,8 +125,8 @@ class Command(BaseCommand):
         totalcode = 0
         for component in components:
             if arch == 'amd64':
-                code, stdout, stderr = self.add_changesfile(
-                     args, dist, arch, component, pkg)
+                code, stdout, stderr = self.include(
+                     args, dist, component, pkg)
                 totalcode += code
 
                 if code != 0:
@@ -136,11 +136,12 @@ class Command(BaseCommand):
             else:
                 debs = [f for f in pkg.files if f.endswith('%s.deb' % arch)]
                 for deb in debs:
-                    code, stdout, stderr = self.includedeb(args, dist, component, pkg, deb)
+                    code, out, err = self.includedeb(
+                        args, dist, component, pkg, deb)
                     if code != 0:
                         self.err('   ... RETURN CODE: %s' % code)
-                        self.err('   ... STDOUT: %s' % stdout)
-                        self.err('   ... STDERR: %s' % stderr)
+                        self.err('   ... STDOUT: %s' % out)
+                        self.err('   ... STDERR: %s' % err)
 
         if totalcode == 0:
             # remove changes files and the files referenced:
