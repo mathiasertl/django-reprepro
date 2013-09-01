@@ -57,28 +57,25 @@ class Command(BaseCommand):
         if not self.dry:
             os.remove(path)
 
+    def ex(self, *args):
+        if self.verbose:
+            print(' '.join(args))
+        if not self.dry:
+            p = Popen(args, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+            return p.returncode, stdout, stderr
+        else:
+            return 0, '', ''
+
     def remove_src_package(self, pkg, dist):
         #reprepro -b /var/www/apt.fsinf.at/ removesrc wheezy iptables-fsinf
         cmd = BASE_ARGS + ['removesrc', dist, pkg]
 
-        if self.verbose or self.dry:
-            print(' '.join(cmd))
-        if not self.dry:
-            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-            stdout, stderr = p.communicate()
+        return self.ex(*cmd)
 
     def add_changesfile(self, cmd, dist, arch, component, changesfile):
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
-
-        # actually execute:
-        if self.verbose:
-            print(' '.join(cmd))
-        if not self.dry:
-            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-            stdout, stderr = p.communicate()
-            return p.returncode, stdout, stderr
-        else:
-            return 0, '', ''  # return dummy values
+        return self.ex(*cmd)
 
     def handle_changesfile(self, changesfile, dist, arch):
         pkg = BinaryPackage(changesfile)
