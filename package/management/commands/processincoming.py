@@ -79,6 +79,11 @@ class Command(BaseCommand):
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
         return self.ex(*cmd)
 
+    def includedeb(self, cmd, dist, component, changes, deb):
+        path = os.path.join(os.path.dirname(changes.path), deb)
+        cmd = cmd + ['-C',  component, 'includedeb', dist, path]
+        return self.ex(*cmd)
+
     def handle_changesfile(self, changesfile, dist, arch):
         pkg = BinaryPackage(changesfile)
         pkg.parse()
@@ -119,19 +124,28 @@ class Command(BaseCommand):
 
         totalcode = 0
         for component in components:
-            code, stdout, stderr = self.add_changesfile(
-                 args, dist, arch, component, pkg)
-            totalcode += code
+            if arch == 'amd64':
+                code, stdout, stderr = self.add_changesfile(
+                     args, dist, arch, component, pkg)
+                totalcode += code
 
-            if code != 0:
-                self.err('   ... RETURN CODE: %s' % code)
-                self.err('   ... STDOUT: %s' % stdout)
-                self.err('   ... STDERR: %s' % stderr)
+                if code != 0:
+                    self.err('   ... RETURN CODE: %s' % code)
+                    self.err('   ... STDOUT: %s' % stdout)
+                    self.err('   ... STDERR: %s' % stderr)
+            else:
+                debs = [f for f in pkg.files if f.endswith('%s.deb' % arch)]
+                for deb in debs:
+                    code, stdout, stderr = self.includedeb(args, dist, component, pkg, deb)
+                    if code != 0:
+                        self.err('   ... RETURN CODE: %s' % code)
+                        self.err('   ... STDOUT: %s' % stdout)
+                        self.err('   ... STDERR: %s' % stderr)
 
         if totalcode == 0:
             # remove changes files and the files referenced:
             basedir = os.path.dirname(changesfile)
-            for filename in pkg.get_files():
+            for filename in pkg.files:
                 self.rm(os.path.join(basedir, filename))
 
             self.rm(changesfile)
