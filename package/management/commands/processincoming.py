@@ -91,12 +91,7 @@ class Command(BaseCommand):
         ]
 
         srcpkg = pkg['Source']
-        if srcpkg in self.src_handled[dist]:
-            args += ['-T', 'deb']
-        else:
-            self.src_handled[dist][srcpkg] = Package.objects.get_or_create(
-                name=srcpkg)[0]
-        package = self.src_handled[dist][srcpkg]
+        package = Package.objects.get_or_create(name=srcpkg)[0]
 
         # get list of components
         if package.all_components:
@@ -145,9 +140,6 @@ class Command(BaseCommand):
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
-
-        if dist not in self.src_handled:
-            self.src_handled[dist] = {}
 
         for f in [f for f in os.listdir(path) if f.endswith('.changes')]:
             try:
