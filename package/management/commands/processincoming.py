@@ -48,6 +48,14 @@ class Command(BaseCommand):
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
 
+    def rm(self, path):
+        if self.norm:
+            return
+        if self.verbose:
+            print('rm %s' % path)
+        if not self.dry:
+            os.remove(path)
+
     def remove_src_package(self, pkg, dist):
         #reprepro -b /var/www/apt.fsinf.at/ removesrc wheezy iptables-fsinf
         cmd = BASE_ARGS + ['removesrc', dist, pkg]
@@ -127,24 +135,13 @@ class Command(BaseCommand):
                 self.err('   ... STDOUT: %s' % stdout)
                 self.err('   ... STDERR: %s' % stderr)
 
-        if totalcode == 0 and not self.dry and not self.norm:
+        if totalcode == 0:
             # remove changes files and the files referenced:
             basedir = os.path.dirname(changesfile)
             for filename in pkg.get_files():
-                fullpath = os.path.join(basedir, filename)
-                if self.verbose:
-                    print('rm %s' % fullpath)
-                os.remove(fullpath)
+                self.rm(os.path.join(basedir, filename))
 
-            if self.verbose:
-                print('rm %s' % changesfile)
-            os.remove(changesfile)
-        elif self.dry and not self.norm:
-            basedir = os.path.dirname(changesfile)
-
-            for filename in pkg.get_files():
-                print('rm %s' % os.path.join(basedir, filename))
-            print('rm %s' % changesfile)
+            self.rm(changesfile)
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
