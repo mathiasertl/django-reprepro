@@ -67,7 +67,7 @@ class Command(BaseCommand):
             p = Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate()
 
-    def add_changesfile(self, cmd, dist, component, changesfile):
+    def add_changesfile(self, cmd, dist, arch, component, changesfile):
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
 
         # actually execute:
@@ -121,7 +121,7 @@ class Command(BaseCommand):
         totalcode = 0
         for component in components:
             code, stdout, stderr = self.add_changesfile(
-                 args, dist, component, pkg)
+                 args, dist, arch, component, pkg)
             totalcode += code
 
             if code != 0:
