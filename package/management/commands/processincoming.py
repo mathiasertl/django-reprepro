@@ -68,12 +68,14 @@ class Command(BaseCommand):
             return 0, '', ''
 
     def remove_src_package(self, pkg, dist):
-        #reprepro -b /var/www/apt.fsinf.at/ removesrc wheezy iptables-fsinf
-        cmd = BASE_ARGS + ['removesrc', dist, pkg]
+        """Remove a source package from a distribution."""
 
+        cmd = BASE_ARGS + ['removesrc', dist, pkg]
         return self.ex(*cmd)
 
     def add_changesfile(self, cmd, dist, arch, component, changesfile):
+        """Add a .changes file to the repository."""
+
         cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
         return self.ex(*cmd)
 
