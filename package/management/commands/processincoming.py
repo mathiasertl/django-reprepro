@@ -84,8 +84,6 @@ class Command(BaseCommand):
         pkg.parse()
 
         args = BASE_ARGS + [
-#            '--outdir=+b/dists/pool/%s/' % dist,
-#            '--dbdir=+b/db/%s/' % dist,
             '--ignore=wrongsourceversion',
             '--ignore=wrongversion',
         ]
