@@ -104,7 +104,8 @@ class Command(BaseCommand):
                 break
             else:
                 if self.verbose:
-                    self.err('%s: Not all files exist, try again in 5 seconds...' % changesfile)
+                    self.err('%s: Not all files exist, try again in 5s...'
+                             % changesfile)
                 time.sleep(5)
 
         # remove package if requested
@@ -113,7 +114,8 @@ class Command(BaseCommand):
 
         totalcode = 0
         for component in components:
-            code, stdout, stderr = self.add_changesfile(args, dist, component, pkg)
+            code, stdout, stderr = self.add_changesfile(
+                 args, dist, component, pkg)
             totalcode += code
 
             if code != 0:
