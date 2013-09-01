@@ -1,19 +1,19 @@
 import os
-import sys
 import time
 
 from optparse import make_option
-from subprocess import Popen, PIPE
+from subprocess import Popen
+from subprocess import PIPE
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from distribution.models import Distribution, Component
+from distribution.models import Component
 
 from incoming.models import IncomingDirectory
 
 from package.models import Package
-from package.util import SourcePackage, BinaryPackage
+from package.util import BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
