@@ -27,6 +27,7 @@ class Package(dict):
 
                 last_field = field
                 self[field] = value
+        self['Architecture'] = self['Architecture'].split()
 
     def exists(self):
         """Check if all files referenced by this package exist."""
