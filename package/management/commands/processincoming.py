@@ -79,7 +79,7 @@ class Command(BaseCommand):
         else:
             return 0, '', ''  # return dummy values
 
-    def handle_changesfile(self, changesfile, dist):
+    def handle_changesfile(self, changesfile, dist, arch):
         pkg = BinaryPackage(changesfile)
         pkg.parse()
 
@@ -151,7 +151,7 @@ class Command(BaseCommand):
 
         for f in [f for f in os.listdir(path) if f.endswith('.changes')]:
             try:
-                self.handle_changesfile(os.path.join(path, f), dist)
+                self.handle_changesfile(os.path.join(path, f), dist, arch)
             except RuntimeError as e:
                 self.err(e)
 
