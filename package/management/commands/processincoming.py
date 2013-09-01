@@ -49,6 +49,7 @@ class Command(BaseCommand):
         self.stderr.write("%s\n" % msg)
 
     def rm(self, path):
+        """Remove a file. Honours --dry, --norm and --verbose."""
         if self.norm:
             return
         if self.verbose:
