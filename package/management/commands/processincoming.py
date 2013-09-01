@@ -39,6 +39,10 @@ class Command(BaseCommand):
                     "adding them. Necessary for source packages that build"\
                     "several binary packages with new versions."
         ),
+        make_option(
+            '--norm', default=False, action='store_true',
+            help="Don't remove files after adding them to the repository."
+        ),
     )
 
     def err(self, msg):
@@ -123,7 +127,7 @@ class Command(BaseCommand):
                 self.err('   ... STDOUT: %s' % stdout)
                 self.err('   ... STDERR: %s' % stderr)
 
-        if totalcode == 0 and not self.dry:
+        if totalcode == 0 and not self.dry and not self.norm:
             # remove changes files and the files referenced:
             basedir = os.path.dirname(changesfile)
             for filename in pkg.get_files():
@@ -135,8 +139,9 @@ class Command(BaseCommand):
             if self.verbose:
                 print('rm %s' % changesfile)
             os.remove(changesfile)
-        elif self.dry:
+        elif self.dry and not self.norm:
             basedir = os.path.dirname(changesfile)
+
             for filename in pkg.get_files():
                 print('rm %s' % os.path.join(basedir, filename))
             print('rm %s' % changesfile)
@@ -173,6 +178,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.verbose = options['verbose']
         self.dry = options['dry_run']
+        self.norm = options['norm']
         self.basedir = os.path.abspath(
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
         self.prerm = options['prerm'].split(',')
