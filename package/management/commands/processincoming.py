@@ -14,6 +14,7 @@ from incoming.models import IncomingDirectory
 
 from package.models import Package
 from package.util import BinaryPackage
+from package.reprepro import RepreproConfig
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
@@ -97,15 +98,12 @@ class Command(BaseCommand):
         package = Package.objects.get_or_create(name=srcpkg)[0]
 
         # get list of components
-        if package.all_components:
-            components = Component.objects.filter(distribution__name=dist)
-        else:
-            components = package.components.filter(distribution__name=dist)
-        components = list(components.values_list('name', flat=True))
-        if len(components) == 0:
-            base = os.path.basename(changesfile)
-            self.err('%s: Not added because no components were found' % base)
-            return  # no components found, not adding
+        components = self.dist_config.components(dist)
+        if not package.all_components:
+            qs = package.components.all().values_list('name', flat=True)
+            components = list(set(components) & set(qs))
+        components = sorted(components)  # just seems cleaner
+        print('%s: %s' % (dist, ', '.join(components)))
 
         # see if all files exist. If not, try a few more times, we might be in
         # the middle of uploading a new package.
@@ -185,6 +183,8 @@ class Command(BaseCommand):
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
         self.prerm = options['prerm'].split(',')
         self.src_handled = {}
+
+        self.dist_config = RepreproConfig(self.basedir)
 
         directories = IncomingDirectory.objects.filter(enabled=True)
 
