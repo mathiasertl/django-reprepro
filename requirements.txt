@@ -1,5 +1,4 @@
-Django==1.6.5
-South>=1.0
+Django==1.9
 gnupg==2.0.2
 pip>=7.1.2
 setuptools>=18.7.1
