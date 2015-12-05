@@ -9,3 +9,4 @@
 *.swo
 db.sqlite3
 packagearchive/localsettings.py
+/fab.conf
