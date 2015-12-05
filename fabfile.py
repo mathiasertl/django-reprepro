@@ -79,7 +79,7 @@ class DeployTask(Task):
         self.sudo('git pull %s %s' % (remote, branch))
         self.sudo('%s install -U -r requirements.txt' % pip)
         self.sudo('%s migrate' % manage)
-        self.sudo('%s collectstatic' % manage)
+        self.sudo('%s collectstatic --noinput' % manage)
         self.sudo('touch /etc/uwsgi-emperor/vassals/packagearchive.ini')
 
 deploy = DeployTask()
