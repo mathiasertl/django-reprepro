@@ -103,7 +103,8 @@ class Command(BaseCommand):
             qs = package.components.all().values_list('name', flat=True)
             components = list(set(components) & set(qs))
         components = sorted(components)  # just seems cleaner
-        print('%s: %s' % (dist, ', '.join(components)))
+        if self.verbose:
+            print('%s: %s' % (dist, ', '.join(components)))
 
         # see if all files exist. If not, try a few more times, we might be in
         # the middle of uploading a new package.
