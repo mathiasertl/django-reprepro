@@ -78,8 +78,19 @@ class DeployTask(Task):
         manage = '%s manage.py' % python
         self.sudo('git pull %s %s' % (remote, branch))
         self.sudo('%s install -U -r requirements.txt' % pip)
+        self.sudo('%s install -U MySQL-python' % pip)
         self.sudo('%s migrate -v 0' % manage)
         self.sudo('%s collectstatic --noinput -v 0' % manage)
         self.sudo('touch /etc/uwsgi-emperor/vassals/packagearchive.ini')
+
+        self.host = config.get(section, 'repo-host')
+        self.path = config.get(section, 'repo-path')
+        venv = config.get(section, 'repo-venv')
+        pip = os.path.join(venv, 'bin', 'pip')
+        python = os.path.join(venv, 'bin', 'python')
+        manage = '%s manage.py' % python
+        self.sudo('git pull %s %s' % (remote, branch))
+        self.sudo('%s install -U -r requirements.txt' % pip)
+        self.sudo('%s install -U MySQL-python' % pip)
 
 deploy = DeployTask()
