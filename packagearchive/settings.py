@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'distribution',
     'incoming',
     'package',
+    'apt_repositories.apps.AptRepositoriesConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
