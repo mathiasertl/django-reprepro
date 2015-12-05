@@ -22,8 +22,23 @@ from .models import Distribution
 from .models import IncomingDirectory
 from .models import Package
 
+@admin.register(Component)
+class ComponentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'enabled', )
+    list_filter = ('enabled', )
 
-admin.site.register(Component)
-admin.site.register(Distribution)
-admin.site.register(IncomingDirectory)
-admin.site.register(Package)
+
+@admin.register(Distribution)
+class DistributionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'vendor', )
+    list_filter= ('vendor', )
+
+
+@admin.register(Package)
+class PackageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'all_components', )
+
+
+@admin.register(IncomingDirectory)
+class IncomingDirectoryAdmin(admin.ModelAdmin):
+    list_display = ('location', 'enabled')

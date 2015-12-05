@@ -16,6 +16,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 from .constants import VENDOR_DEBIAN
 from .constants import VENDOR_UBUNTU
@@ -26,24 +27,27 @@ VENDORS = (
 )
 
 
+@python_2_unicode_compatible
 class Component(models.Model):
     name = models.CharField(max_length=16, unique=True)
     enabled = models.BooleanField(default=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Distribution(models.Model):
     name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
 
     components = models.ManyToManyField(Component)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Package(models.Model):
     name = models.CharField(max_length=64, unique=True)
     all_components = models.BooleanField(default=False)
@@ -57,10 +61,14 @@ class Package(models.Model):
         help_text="Remove package from index prior to adding a new version of the package."
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class IncomingDirectory(models.Model):
     location = models.CharField(max_length=64)
     enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.location
