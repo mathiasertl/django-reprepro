@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'distribution',
-    'incoming',
-    'package',
     'apt_repositories.apps.AptRepositoriesConfig',
 ]
 
