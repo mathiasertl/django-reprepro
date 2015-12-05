@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of packagearchive (https://github.com/mathiasertl/packagearchive).
+#
+# packagearchive is free software: you can redistribute it and/or modify it under the terms of
+# the GNU General Public License as published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+#
+# packagearchive is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+# the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with packagearchive.
+# If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import unicode_literals
+
 import os
 import time
 
@@ -8,13 +25,10 @@ from subprocess import PIPE
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from distribution.models import Component
-
-from incoming.models import IncomingDirectory
-
-from package.models import Package
-from package.util import BinaryPackage
-from package.reprepro import RepreproConfig
+from apt_repositories.models import IncomingDirectory
+from apt_repositories.models import Package
+from apt_repositories.reprepro import RepreproConfig
+from apt_repositories.util import BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
