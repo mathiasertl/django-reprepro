@@ -18,7 +18,6 @@ from __future__ import unicode_literals
 import os
 import time
 
-from optparse import make_option
 from subprocess import Popen
 from subprocess import PIPE
 
@@ -37,28 +36,16 @@ class Command(BaseCommand):
     args = ''
     help = 'Process incoming files'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--dry-run',
-            action='store_true',
-            default=False,
-            help="Don't really add any files"
-        ),
-        make_option('--verbose',
-            action='store_true',
-            default=False,
-            help="Don't really add any files"
-        ),
-        make_option('--prerm',
-            default='',
+    def add_arguments(self, parser):
+        parser.add_argument('--dry-run', action='store_true', default=False,
+                            help="Don't really add any files.")
+        parser.add_argument('--prerm', default='',
             help="Coma-seperated list of source packages to remove before "\
                     "adding them. Necessary for source packages that build"\
                     "several binary packages with new versions."
-        ),
-        make_option(
-            '--norm', default=False, action='store_true',
-            help="Don't remove files after adding them to the repository."
-        ),
-    )
+        )
+        parser.add_argument('--norm', default=False, action='store_true',
+                            help="Don't remove files after adding them to the repository.")
 
     def err(self, msg):
         self.stderr.write("%s\n" % msg)
@@ -191,7 +178,7 @@ class Command(BaseCommand):
             self.handle_directory(path)
 
     def handle(self, *args, **options):
-        self.verbose = options['verbose']
+        self.verbose = options['verbosity'] >= 2
         self.dry = options['dry_run']
         self.norm = options['norm']
         self.basedir = os.path.abspath(
