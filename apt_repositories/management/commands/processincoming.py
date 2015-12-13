@@ -23,6 +23,7 @@ from subprocess import PIPE
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from apt_repositories.models import IncomingDirectory
 from apt_repositories.models import Package
@@ -97,11 +98,14 @@ class Command(BaseCommand):
 
         srcpkg = pkg['Source']
         package = Package.objects.get_or_create(name=srcpkg)[0]
+        package.last_seen = timezone.now()
+        package.save()
 
         # get list of components
         components = self.dist_config.components(dist)
         if not package.all_components:
             qs = package.components.all().values_list('name', flat=True)
+            package.components.update(last_seen=timezone.now())
             components = list(set(components) & set(qs))
         components = sorted(components)  # just seems cleaner
         if self.verbose:
