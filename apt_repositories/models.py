@@ -31,6 +31,7 @@ VENDORS = (
 class Component(models.Model):
     name = models.CharField(max_length=16, unique=True)
     enabled = models.BooleanField(default=True)
+    last_seen = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.name
@@ -40,6 +41,7 @@ class Component(models.Model):
 class Distribution(models.Model):
     name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
+    last_seen = models.DateTimeField(null=True)
 
     components = models.ManyToManyField(Component)
 
@@ -51,6 +53,7 @@ class Distribution(models.Model):
 class Package(models.Model):
     name = models.CharField(max_length=64, unique=True)
     all_components = models.BooleanField(default=False)
+    last_seen = models.DateTimeField(null=True)
 
     components = models.ManyToManyField(Component)
 
