@@ -26,6 +26,7 @@ from .models import Package
 class ComponentAdmin(admin.ModelAdmin):
     list_display = ('name', 'enabled', 'last_seen', )
     list_filter = ('enabled', )
+    ordering = ('name', )
     readonly_fields = ('last_seen', )
 
 
@@ -33,12 +34,14 @@ class ComponentAdmin(admin.ModelAdmin):
 class DistributionAdmin(admin.ModelAdmin):
     list_display = ('name', 'vendor', 'last_seen', )
     list_filter= ('vendor', )
+    ordering = ('name', )
     readonly_fields = ('last_seen', )
 
 
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     list_display = ('name', 'all_components', 'last_seen', )
+    ordering = ('name', )
     readonly_fields = ('last_seen', )
 
 
