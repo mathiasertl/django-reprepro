@@ -40,9 +40,13 @@ class DistributionAdmin(admin.ModelAdmin):
 
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'all_components', 'last_seen', )
+    list_display = ('name', 'components_list', 'last_seen', )
+    list_filter = ('all_components', 'components', )
     ordering = ('name', )
     readonly_fields = ('last_seen', )
+
+    def components_list(self, obj):
+        return ', '.join(obj.components.all().order_by('name').values_list('name', flat=True))
 
 
 @admin.register(IncomingDirectory)
