@@ -24,19 +24,22 @@ from .models import Package
 
 @admin.register(Component)
 class ComponentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'enabled', )
+    list_display = ('name', 'enabled', 'last_seen', )
     list_filter = ('enabled', )
+    readonly_fields = ('last_seen', )
 
 
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'vendor', )
+    list_display = ('name', 'vendor', 'last_seen', )
     list_filter= ('vendor', )
+    readonly_fields = ('last_seen', )
 
 
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'all_components', )
+    list_display = ('name', 'all_components', 'last_seen', )
+    readonly_fields = ('last_seen', )
 
 
 @admin.register(IncomingDirectory)
