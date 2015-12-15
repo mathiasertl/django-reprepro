@@ -29,7 +29,6 @@ from apt_repositories.models import Distribution
 from apt_repositories.models import IncomingDirectory
 from apt_repositories.models import Package
 from apt_repositories.models import PackageUpload
-from apt_repositories.reprepro import RepreproConfig
 from apt_repositories.util import BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
@@ -81,12 +80,12 @@ class Command(BaseCommand):
     def include(self, cmd, dist, component, changesfile):
         """Add a .changes file to the repository."""
 
-        cmd = cmd + ['-C', component, 'include', dist.name, changesfile.path]
+        cmd = cmd + ['-C', component.name, 'include', dist.name, changesfile.path]
         return self.ex(*cmd)
 
     def includedeb(self, cmd, dist, component, changes, deb):
         path = os.path.join(os.path.dirname(changes.path), deb)
-        cmd = cmd + ['-C',  component, 'includedeb', dist.name, path]
+        cmd = cmd + ['-C',  component.name, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
     def handle_changesfile(self, changesfile, dist, arch):
@@ -104,14 +103,10 @@ class Command(BaseCommand):
         package.save()
 
         # get list of components
-        components = self.dist_config.components(dist.name)
-        if not package.all_components:
-            qs = package.components.all().values_list('name', flat=True)
-            package.components.update(last_seen=timezone.now())
-            components = list(set(components) & set(qs))
-        components = sorted(components)  # just seems cleaner
+        components = package.components.order_by('name').filter(distribution=dist)
+        components.update(last_seen=timezone.now())
         if self.verbose:
-            print('%s: %s' % (dist, ', '.join(components)))
+            print('%s: %s' % (dist, ', '.join([c.name for c in components])))
 
         # see if all files exist. If not, try a few more times, we might be in
         # the middle of uploading a new package.
@@ -132,7 +127,7 @@ class Command(BaseCommand):
 
         upload = PackageUpload.objects.create(package=package, arch=arch, version=pkg['Version'],
                                               dist=dist)
-        upload.components.add(*package.components.all())
+        upload.components.add(*components)
 
         for component in components:
             if arch == 'amd64':
@@ -197,8 +192,6 @@ class Command(BaseCommand):
             options.get('basedir', getattr(settings, 'APT_BASEDIR', '.')))
         self.prerm = options['prerm'].split(',')
         self.src_handled = {}
-
-        self.dist_config = RepreproConfig(self.basedir)
 
         directories = IncomingDirectory.objects.filter(enabled=True)
 
