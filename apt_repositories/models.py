@@ -71,6 +71,8 @@ class Package(models.Model):
 @python_2_unicode_compatible
 class PackageUpload(models.Model):
     package = models.ForeignKey(Package)
+    components = models.ManyToManyField(Component)
+
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.CharField(max_length=32)
     arch = models.CharField(max_length=8)
