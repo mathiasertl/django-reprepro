@@ -69,6 +69,17 @@ class Package(models.Model):
 
 
 @python_2_unicode_compatible
+class PackageUpload(models.Model):
+    package = models.ForeignKey(Package)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    version = models.CharField(max_length=32)
+    arch = models.CharField(max_length=8)
+
+    def __str__(self):
+        return '%s_%s_%s' % (self.package.name, self.version, self.arch)
+
+
+@python_2_unicode_compatible
 class IncomingDirectory(models.Model):
     location = models.CharField(max_length=64)
     enabled = models.BooleanField(default=True)
