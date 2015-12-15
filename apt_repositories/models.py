@@ -72,6 +72,7 @@ class Package(models.Model):
 class PackageUpload(models.Model):
     package = models.ForeignKey(Package)
     components = models.ManyToManyField(Component)
+    dists = models.ManyToManyField(Distribution)
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.CharField(max_length=32)
