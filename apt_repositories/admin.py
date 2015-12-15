@@ -44,6 +44,7 @@ class PackageAdmin(admin.ModelAdmin):
     list_filter = ('all_components', 'components', )
     ordering = ('name', )
     readonly_fields = ('last_seen', )
+    search_fields = ('name', )
 
     def components_list(self, obj):
         return ', '.join(obj.components.all().order_by('name').values_list('name', flat=True))
