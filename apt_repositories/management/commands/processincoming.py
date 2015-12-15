@@ -25,8 +25,10 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from apt_repositories.models import Distribution
 from apt_repositories.models import IncomingDirectory
 from apt_repositories.models import Package
+from apt_repositories.models import PackageUpload
 from apt_repositories.reprepro import RepreproConfig
 from apt_repositories.util import BinaryPackage
 
@@ -73,18 +75,18 @@ class Command(BaseCommand):
     def remove_src_package(self, pkg, dist):
         """Remove a source package from a distribution."""
 
-        cmd = BASE_ARGS + ['removesrc', dist, pkg]
+        cmd = BASE_ARGS + ['removesrc', dist.name, pkg]
         return self.ex(*cmd)
 
     def include(self, cmd, dist, component, changesfile):
         """Add a .changes file to the repository."""
 
-        cmd = cmd + ['-C', component, 'include', dist, changesfile.path]
+        cmd = cmd + ['-C', component, 'include', dist.name, changesfile.path]
         return self.ex(*cmd)
 
     def includedeb(self, cmd, dist, component, changes, deb):
         path = os.path.join(os.path.dirname(changes.path), deb)
-        cmd = cmd + ['-C',  component, 'includedeb', dist, path]
+        cmd = cmd + ['-C',  component, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
     def handle_changesfile(self, changesfile, dist, arch):
@@ -102,7 +104,7 @@ class Command(BaseCommand):
         package.save()
 
         # get list of components
-        components = self.dist_config.components(dist)
+        components = self.dist_config.components(dist.name)
         if not package.all_components:
             qs = package.components.all().values_list('name', flat=True)
             package.components.update(last_seen=timezone.now())
@@ -127,6 +129,11 @@ class Command(BaseCommand):
             self.remove_src_package(pkg=srcpkg, dist=dist)
 
         totalcode = 0
+
+        upload = PackageUpload.objects.create(package=package, arch=arch, version=pkg['Version'],
+                                              dist=dist)
+        upload.components.add(*package.components.all())
+
         for component in components:
             if arch == 'amd64':
                 code, stdout, stderr = self.include(
@@ -157,6 +164,7 @@ class Command(BaseCommand):
 
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
+        dist = Distribution.objects.get(name=dist)
 
         for f in [f for f in os.listdir(path) if f.endswith('.changes')]:
             try:
