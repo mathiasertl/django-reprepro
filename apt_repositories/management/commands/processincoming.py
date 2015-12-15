@@ -77,25 +77,20 @@ class Command(BaseCommand):
         cmd = BASE_ARGS + ['removesrc', dist.name, pkg]
         return self.ex(*cmd)
 
-    def include(self, cmd, dist, component, changesfile):
+    def include(self, dist, component, changesfile):
         """Add a .changes file to the repository."""
 
-        cmd = cmd + ['-C', component.name, 'include', dist.name, changesfile.path]
+        cmd = BASE_ARGS + ['-C', component.name, 'include', dist.name, changesfile.path]
         return self.ex(*cmd)
 
-    def includedeb(self, cmd, dist, component, changes, deb):
+    def includedeb(self, dist, component, changes, deb):
         path = os.path.join(os.path.dirname(changes.path), deb)
-        cmd = cmd + ['-C',  component.name, 'includedeb', dist.name, path]
+        cmd = BASE_ARGS + ['-C',  component.name, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
     def handle_changesfile(self, changesfile, dist, arch):
         pkg = BinaryPackage(changesfile)
         pkg.parse()
-
-        args = BASE_ARGS + [
-            '--ignore=wrongsourceversion',
-            '--ignore=wrongversion',
-        ]
 
         srcpkg = pkg['Source']
         package = Package.objects.get_or_create(name=srcpkg)[0]
@@ -131,7 +126,7 @@ class Command(BaseCommand):
 
         for component in components:
             if arch == 'amd64':
-                code, stdout, stderr = self.include(args, dist, component, pkg)
+                code, stdout, stderr = self.include(dist, component, pkg)
                 totalcode += code
 
                 if code != 0:
@@ -141,7 +136,7 @@ class Command(BaseCommand):
             else:
                 debs = [f for f in pkg.files if f.endswith('%s.deb' % arch)]
                 for deb in debs:
-                    code, out, err = self.includedeb(args, dist, component, pkg, deb)
+                    code, out, err = self.includedeb(dist, component, pkg, deb)
                     if code != 0:
                         self.err('   ... RETURN CODE: %s' % code)
                         self.err('   ... STDOUT: %s' % out)
