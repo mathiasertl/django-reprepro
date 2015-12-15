@@ -131,8 +131,7 @@ class Command(BaseCommand):
 
         for component in components:
             if arch == 'amd64':
-                code, stdout, stderr = self.include(
-                     args, dist, component, pkg)
+                code, stdout, stderr = self.include(args, dist, component, pkg)
                 totalcode += code
 
                 if code != 0:
@@ -142,8 +141,7 @@ class Command(BaseCommand):
             else:
                 debs = [f for f in pkg.files if f.endswith('%s.deb' % arch)]
                 for deb in debs:
-                    code, out, err = self.includedeb(
-                        args, dist, component, pkg, deb)
+                    code, out, err = self.includedeb(args, dist, component, pkg, deb)
                     if code != 0:
                         self.err('   ... RETURN CODE: %s' % code)
                         self.err('   ... STDOUT: %s' % out)
