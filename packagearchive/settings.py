@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'apt_repositories.apps.AptRepositoriesConfig',
+    'django_reprepro',
 ]
 
 MIDDLEWARE_CLASSES = [
