@@ -76,7 +76,6 @@ class DeployTask(Task):
         pip = os.path.join(venv, 'bin', 'pip')
         python = os.path.join(venv, 'bin', 'python')
         manage = '%s manage.py' % python
-        self.sudo('git pull %s %s' % (remote, branch))
         self.sudo('%s install -U -r requirements.txt' % pip)
         self.sudo('%s install -U mysqlclient' % pip)
         self.sudo('%s migrate -v 0' % manage)
