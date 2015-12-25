@@ -29,8 +29,9 @@ from django.utils import timezone
 from django_reprepro.models import Distribution
 from django_reprepro.models import IncomingDirectory
 from django_reprepro.models import Package
+from django_reprepro.models import BinaryPackage
 from django_reprepro.models import SourcePackage
-from django_reprepro.util import BinaryPackage
+from django_reprepro.util import ChangesFile
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
@@ -122,7 +123,7 @@ class Command(BaseCommand):
         return p
 
     def handle_changesfile(self, changesfile, dist, arch):
-        pkg = BinaryPackage(changesfile)
+        pkg = ChangesFile(changesfile)
         pkg.parse()
 
         srcpkg = pkg['Source']

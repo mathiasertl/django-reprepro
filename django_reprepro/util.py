@@ -21,7 +21,7 @@ import gnupg
 import six
 
 
-class Package(dict):
+class ChangesFile(dict):
     _parsed = False
     _files = None
 
@@ -87,11 +87,3 @@ class Package(dict):
                 return False
 
         return True
-
-
-class SourcePackage(Package):
-    pass
-
-
-class BinaryPackage(Package):
-    pass
