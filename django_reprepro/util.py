@@ -43,6 +43,10 @@ class Package(dict):
 
         return self._files
 
+    @property
+    def binary_packages(self):
+        return [f for f in self.files if f.endswith('.deb')]
+
     def parse(self):
         self.data = gnupg.GPG().decrypt_file(open(self.path, 'rb'))
         if not self.data.valid:
