@@ -16,6 +16,7 @@
 from __future__ import unicode_literals
 
 import os
+import re
 import time
 
 from subprocess import Popen
@@ -88,6 +89,21 @@ class Command(BaseCommand):
         cmd = BASE_ARGS + ['-C',  component.name, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
+    def record_source_upload(self, package, changes, dist, components):
+        version = changes['Version'].rsplit('-', 1)[0]
+        src_upload = SourcePackage.objects.create(package=package, version=version, dist=dist)
+        src_upload.components.add(*components)
+        return src_upload
+
+    def record_binary_upload(self, deb, package, dist, components):
+        match = re.match('(?P<name>.*)_(?P<version>.*)_(?P<arch>.*).deb', deb)
+        version = match.group('version')
+        arch = match.group('arch')
+
+        p = BinaryPackage.objects.create(package=package, dist=dist, version=version, arch=arch)
+        p.components.add(*components)
+        return p
+
     def handle_changesfile(self, changesfile, dist, arch):
         pkg = BinaryPackage(changesfile)
         pkg.parse()
@@ -120,23 +136,26 @@ class Command(BaseCommand):
 
         totalcode = 0
 
-        src_upload = SourcePackage.objects.create(package=package, version=pkg['Version'], dist=dist)
-        src_upload.components.add(*components)
-
         for component in components:
             if arch == 'amd64':
                 code, stdout, stderr = self.include(dist, component, pkg)
                 totalcode += code
 
-                if code != 0:
+                if code == 0:
+                    self.record_source_upload(package, pkg, dist, components)
+                    for deb in pkg.binary_packages:
+                        self.record_binary_upload(deb, package, dist, components)
+                else:
                     self.err('   ... RETURN CODE: %s' % code)
                     self.err('   ... STDOUT: %s' % stdout)
                     self.err('   ... STDERR: %s' % stderr)
             else:
-                debs = [f for f in pkg.files if f.endswith('%s.deb' % arch)]
+                debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
                 for deb in debs:
                     code, out, err = self.includedeb(dist, component, pkg, deb)
-                    if code != 0:
+                    if code == 0:
+                        self.record_binary_upload(deb, package, dist, components)
+                    else:
                         self.err('   ... RETURN CODE: %s' % code)
                         self.err('   ... STDOUT: %s' % out)
                         self.err('   ... STDERR: %s' % err)
