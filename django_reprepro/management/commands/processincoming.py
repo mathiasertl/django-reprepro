@@ -104,13 +104,15 @@ class Command(BaseCommand):
     def record_binary_upload(self, deb, package, dist, components):
         # parse name, version and arch from the filename
         match = re.match('(?P<name>.*)_(?P<version>.*)_(?P<arch>.*).deb', deb)
+        name = match.group('name')
         version = match.group('version')
         arch = match.group('arch')
 
-        p, created = BinaryPackage.objects.get_or_create(package=package, dist=dist, defaults={
-            'version': version,
-            'arch': arch,
-        })
+        p, created = BinaryPackage.objects.get_or_create(
+            package=package, name=name, dist=dist, defaults={
+                'version': version,
+                'arch': arch,
+            })
         if not created:
             p.version = version
             p.arch = arch
