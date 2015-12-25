@@ -91,6 +91,6 @@ class DeployTask(Task):
         manage = '%s manage.py' % python
         self.sudo('git pull %s %s' % (remote, branch))
         self.sudo('%s install -U -r requirements.txt' % pip)
-        self.sudo('%s install -U MySQL-python' % pip)
+        self.sudo('%s install -U mysqlclient' % pip)
 
 deploy = DeployTask()
