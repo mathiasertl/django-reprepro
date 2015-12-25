@@ -21,6 +21,7 @@ from .models import Component
 from .models import Distribution
 from .models import IncomingDirectory
 from .models import Package
+from .models import BinaryPackage
 from .models import SourcePackage
 
 @admin.register(Component)
@@ -51,10 +52,23 @@ class SourcePackageInline(admin.TabularInline):
         return False
 
 
+class BinaryPackageInline(admin.TabularInline):
+    model = BinaryPackage
+    fields = ('timestamp', 'version', 'dist', 'components')
+    readonly_fields = ('timestamp', 'version', 'dist', 'components')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj):
+        return False
+
+
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     inlines = [
         SourcePackageInline,
+        BinaryPackageInline,
     ]
     list_display = ('name', 'components_list', 'last_seen', )
     list_filter = ('all_components', 'components', )
