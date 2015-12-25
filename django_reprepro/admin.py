@@ -54,8 +54,8 @@ class SourcePackageInline(admin.TabularInline):
 
 class BinaryPackageInline(admin.TabularInline):
     model = BinaryPackage
-    fields = ('timestamp', 'version', 'dist', 'components')
-    readonly_fields = ('timestamp', 'version', 'dist', 'components')
+    fields = ('timestamp', 'name', 'version', 'dist', 'components')
+    readonly_fields = ('timestamp', 'name', 'version', 'dist', 'components')
 
     def has_add_permission(self, request):
         return False
