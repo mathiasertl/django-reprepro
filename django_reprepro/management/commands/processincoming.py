@@ -91,16 +91,30 @@ class Command(BaseCommand):
 
     def record_source_upload(self, package, changes, dist, components):
         version = changes['Version'].rsplit('-', 1)[0]
-        src_upload = SourcePackage.objects.create(package=package, version=version, dist=dist)
-        src_upload.components.add(*components)
-        return src_upload
+        p, created = SourcePackage.objects.get_or_create(package=package, dist=dist, defaults={
+            'version': version,
+        })
+        if not created:
+            p.version = version
+            p.components.clear()
+
+        p.components.add(*components)
+        return p
 
     def record_binary_upload(self, deb, package, dist, components):
         match = re.match('(?P<name>.*)_(?P<version>.*)_(?P<arch>.*).deb', deb)
         version = match.group('version')
         arch = match.group('arch')
 
-        p = BinaryPackage.objects.create(package=package, dist=dist, version=version, arch=arch)
+        p, created = BinaryPackage.objects.get_or_create(package=package, dist=dist, defaults={
+            'version': version,
+            'arch': arch,
+        })
+        if not created:
+            p.version = version
+            p.arch = arch
+            p.components.clear()
+
         p.components.add(*components)
         return p
 
