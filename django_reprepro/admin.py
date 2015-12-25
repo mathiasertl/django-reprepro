@@ -21,7 +21,7 @@ from .models import Component
 from .models import Distribution
 from .models import IncomingDirectory
 from .models import Package
-from .models import PackageUpload
+from .models import SourcePackage
 
 @admin.register(Component)
 class ComponentAdmin(admin.ModelAdmin):
@@ -39,8 +39,8 @@ class DistributionAdmin(admin.ModelAdmin):
     readonly_fields = ('last_seen', )
 
 
-class PackageUploadInline(admin.TabularInline):
-    model = PackageUpload
+class SourcePackageInline(admin.TabularInline):
+    model = SourcePackage
     fields = ('timestamp', 'version', 'dist', 'arch', 'components')
     readonly_fields = ('timestamp', 'version', 'dist', 'arch', 'components')
 
@@ -54,7 +54,7 @@ class PackageUploadInline(admin.TabularInline):
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
     inlines = [
-        PackageUploadInline,
+        SourcePackageInline,
     ]
     list_display = ('name', 'components_list', 'last_seen', )
     list_filter = ('all_components', 'components', )

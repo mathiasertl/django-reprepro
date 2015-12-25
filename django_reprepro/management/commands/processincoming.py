@@ -28,7 +28,7 @@ from django.utils import timezone
 from django_reprepro.models import Distribution
 from django_reprepro.models import IncomingDirectory
 from django_reprepro.models import Package
-from django_reprepro.models import PackageUpload
+from django_reprepro.models import SourcePackage
 from django_reprepro.util import BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
@@ -120,7 +120,7 @@ class Command(BaseCommand):
 
         totalcode = 0
 
-        upload = PackageUpload.objects.create(package=package, arch=arch, version=pkg['Version'],
+        upload = SourcePackage.objects.create(package=package, arch=arch, version=pkg['Version'],
                                               dist=dist)
         upload.components.add(*components)
 

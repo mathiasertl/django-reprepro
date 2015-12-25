@@ -75,7 +75,7 @@ class Package(models.Model):
 
 
 @python_2_unicode_compatible
-class PackageUpload(models.Model):
+class SourcePackage(models.Model):
     package = models.ForeignKey(Package)
     dist = models.ForeignKey(Distribution)
     components = models.ManyToManyField(Component)
