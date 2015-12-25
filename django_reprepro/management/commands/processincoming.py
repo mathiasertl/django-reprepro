@@ -25,11 +25,11 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from apt_repositories.models import Distribution
-from apt_repositories.models import IncomingDirectory
-from apt_repositories.models import Package
-from apt_repositories.models import PackageUpload
-from apt_repositories.util import BinaryPackage
+from django_reprepro.models import Distribution
+from django_reprepro.models import IncomingDirectory
+from django_reprepro.models import Package
+from django_reprepro.models import PackageUpload
+from django_reprepro.util import BinaryPackage
 
 BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
 
