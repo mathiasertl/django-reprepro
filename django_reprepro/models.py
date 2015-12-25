@@ -90,6 +90,7 @@ class SourcePackage(models.Model):
 @python_2_unicode_compatible
 class BinaryPackage(models.Model):
     package = models.ForeignKey(Package)
+    name = models.CharField(max_length=64)  # name of the binary package
     dist = models.ForeignKey(Distribution)
     components = models.ManyToManyField(Component)
 
