@@ -17,6 +17,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext as _
 
 from .constants import VENDOR_DEBIAN
 from .constants import VENDOR_UBUNTU
@@ -42,8 +43,10 @@ class Distribution(models.Model):
     name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
     last_seen = models.DateTimeField(null=True)
+    released = models.DateTimeField(null=True, blank=True)
+    supported_until = models.DateTimeField(null=True, blank=True)
 
-    components = models.ManyToManyField(Component)
+    components = models.ManyToManyField(Component, blank=True)
 
     def __str__(self):
         return self.name
@@ -52,10 +55,13 @@ class Distribution(models.Model):
 @python_2_unicode_compatible
 class Package(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    all_components = models.BooleanField(default=False)
-    last_seen = models.DateTimeField(null=True)
+    last_seen = models.DateTimeField(null=True, blank=True)
+    all_components = models.BooleanField(
+        default=False,
+        help_text=_('If set, the package will be automatically added to all known components.')
+    )
 
-    components = models.ManyToManyField(Component)
+    components = models.ManyToManyField(Component, blank=True)
 
     # Very useful if binary packages have individual changelogs where
     # the version is different from the source package version.
