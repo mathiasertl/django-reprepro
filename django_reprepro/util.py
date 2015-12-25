@@ -18,6 +18,8 @@ from __future__ import unicode_literals
 import os
 import gnupg
 
+import six
+
 
 class Package(dict):
     _parsed = False
@@ -52,8 +54,12 @@ class Package(dict):
         if not self.data.valid:
             raise RuntimeError("%s: GPG signature not valid" % self.path)
 
+        data = self.data.data
+        if six.PY3:
+            data = data.decode('utf-8')
+
         last_field = None
-        for line in self.data.data.strip().split("\n"):
+        for line in data.strip().split("\n"):
             if line.startswith(' '):
                 # append to last line
                 if self[last_field] == '':
