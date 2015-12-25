@@ -102,6 +102,7 @@ class Command(BaseCommand):
         return p
 
     def record_binary_upload(self, deb, package, dist, components):
+        # parse name, version and arch from the filename
         match = re.match('(?P<name>.*)_(?P<version>.*)_(?P<arch>.*).deb', deb)
         version = match.group('version')
         arch = match.group('arch')
