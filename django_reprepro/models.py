@@ -84,7 +84,7 @@ class SourcePackage(models.Model):
     version = models.CharField(max_length=32)
 
     def __str__(self):
-        return '%s_%s_%s' % (self.package.name, self.version)
+        return '%s_%s' % (self.package.name, self.version)
 
 
 @python_2_unicode_compatible
@@ -99,7 +99,7 @@ class BinaryPackage(models.Model):
     arch = models.CharField(max_length=8)
 
     def __str__(self):
-        return '%s_%s_%s' % (self.package.name, self.version, self.arch)
+        return '%s_%s_%s' % (self.name, self.version, self.arch)
 
 
 @python_2_unicode_compatible
