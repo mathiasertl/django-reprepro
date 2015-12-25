@@ -78,7 +78,7 @@ class DeployTask(Task):
         manage = '%s admin/manage.py' % python
         self.sudo('%s install -U -r requirements.txt' % pip)
         self.sudo('%s install -U mysqlclient' % pip)
-        self.sudo('%s migrate -v 0' % manage)
+        self.sudo('%s migrate --database=django-reprepro -v 0' % manage)
         self.sudo('%s collectstatic --noinput -v 0' % manage)
         self.sudo('touch /etc/uwsgi-emperor/vassals/packagearchive.ini')
 
