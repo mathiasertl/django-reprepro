@@ -41,8 +41,8 @@ class DistributionAdmin(admin.ModelAdmin):
 
 class SourcePackageInline(admin.TabularInline):
     model = SourcePackage
-    fields = ('timestamp', 'version', 'dist', 'arch', 'components')
-    readonly_fields = ('timestamp', 'version', 'dist', 'arch', 'components')
+    fields = ('timestamp', 'version', 'dist', 'components')
+    readonly_fields = ('timestamp', 'version', 'dist', 'components')
 
     def has_add_permission(self, request):
         return False

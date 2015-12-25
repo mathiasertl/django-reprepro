@@ -82,6 +82,19 @@ class SourcePackage(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.CharField(max_length=32)
+
+    def __str__(self):
+        return '%s_%s_%s' % (self.package.name, self.version)
+
+
+@python_2_unicode_compatible
+class BinaryPackage(models.Model):
+    package = models.ForeignKey(Package)
+    dist = models.ForeignKey(Distribution)
+    components = models.ManyToManyField(Component)
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    version = models.CharField(max_length=32)
     arch = models.CharField(max_length=8)
 
     def __str__(self):

@@ -120,9 +120,8 @@ class Command(BaseCommand):
 
         totalcode = 0
 
-        upload = SourcePackage.objects.create(package=package, arch=arch, version=pkg['Version'],
-                                              dist=dist)
-        upload.components.add(*components)
+        src_upload = SourcePackage.objects.create(package=package, version=pkg['Version'], dist=dist)
+        src_upload.components.add(*components)
 
         for component in components:
             if arch == 'amd64':
