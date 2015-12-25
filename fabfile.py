@@ -80,7 +80,7 @@ class DeployTask(Task):
         self.sudo('%s install -U mysqlclient' % pip)
         self.sudo('%s migrate --database=django-reprepro -v 0' % manage)
         self.sudo('%s collectstatic --noinput -v 0' % manage)
-        self.sudo('touch /etc/uwsgi-emperor/vassals/packagearchive.ini')
+        self.sudo('touch /etc/uwsgi-emperor/vassals/%s' % config.get(section, 'wsgi-vassal'))
 
         # deploy on reposository host
         self.host = config.get(section, 'repo-host')
