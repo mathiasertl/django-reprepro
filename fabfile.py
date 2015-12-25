@@ -75,7 +75,7 @@ class DeployTask(Task):
         venv = config.get(section, 'wsgi-venv')
         pip = os.path.join(venv, 'bin', 'pip')
         python = os.path.join(venv, 'bin', 'python')
-        manage = '%s manage.py' % python
+        manage = '%s admin/manage.py' % python
         self.sudo('%s install -U -r requirements.txt' % pip)
         self.sudo('%s install -U mysqlclient' % pip)
         self.sudo('%s migrate -v 0' % manage)
