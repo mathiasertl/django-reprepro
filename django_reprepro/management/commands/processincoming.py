@@ -98,6 +98,7 @@ class Command(BaseCommand):
         if not created:
             p.version = version
             p.components.clear()
+            p.save()
 
         p.components.add(*components)
         return p
@@ -118,6 +119,7 @@ class Command(BaseCommand):
             p.version = version
             p.arch = arch
             p.components.clear()
+            p.save()
 
         p.components.add(*components)
         return p
