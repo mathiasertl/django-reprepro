@@ -43,8 +43,8 @@ class Distribution(models.Model):
     name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
     last_seen = models.DateTimeField(null=True)
-    released = models.DateTimeField(null=True, blank=True)
-    supported_until = models.DateTimeField(null=True, blank=True)
+    released = models.DateField(null=True, blank=True)
+    supported_until = models.DateField(null=True, blank=True)
 
     components = models.ManyToManyField(Component, blank=True)
 

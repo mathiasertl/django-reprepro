@@ -34,7 +34,7 @@ class ComponentAdmin(admin.ModelAdmin):
 
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'vendor', 'last_seen', )
+    list_display = ('name', 'vendor', 'last_seen', 'supported_until')
     list_filter= ('vendor', )
     ordering = ('name', )
     readonly_fields = ('last_seen', )
@@ -44,6 +44,7 @@ class SourcePackageInline(admin.TabularInline):
     model = SourcePackage
     fields = ('timestamp', 'version', 'dist', 'components')
     readonly_fields = ('timestamp', 'version', 'dist', 'components')
+    ordering = ('-dist__released', )
 
     def has_add_permission(self, request):
         return False
@@ -56,6 +57,7 @@ class BinaryPackageInline(admin.TabularInline):
     model = BinaryPackage
     fields = ('timestamp', 'name', 'version', 'arch', 'dist', 'components')
     readonly_fields = ('timestamp', 'name', 'version', 'arch', 'dist', 'components')
+    ordering = ('-dist__released', 'name', 'arch', )
 
     def has_add_permission(self, request):
         return False
