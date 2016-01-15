@@ -58,8 +58,6 @@ class Command(BaseCommand):
         """Remove a file. Honours --dry, --norm and --verbose."""
         if self.norm:
             return
-        if self.verbose:
-            print('rm %s' % path)
         if not self.dry:
             os.remove(path)
 
