@@ -173,6 +173,8 @@ class Command(BaseCommand):
                 debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
                 for deb in debs:
                     code, stdout, stderr = self.includedeb(dist, component, pkg, deb)
+                    totalcode += code
+
                     if code == 0:
                         self.record_binary_upload(deb, package, dist, components)
                     else:
