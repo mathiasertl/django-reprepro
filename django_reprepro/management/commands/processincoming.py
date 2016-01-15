@@ -172,13 +172,13 @@ class Command(BaseCommand):
             else:
                 debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
                 for deb in debs:
-                    code, out, err = self.includedeb(dist, component, pkg, deb)
+                    code, stdout, stderr = self.includedeb(dist, component, pkg, deb)
                     if code == 0:
                         self.record_binary_upload(deb, package, dist, components)
                     else:
                         self.err('   ... RETURN CODE: %s' % code)
-                        self.err('   ... STDOUT: %s' % out.decode('utf-8'))
-                        self.err('   ... STDERR: %s' % err.decode('utf-8'))
+                        self.err('   ... STDOUT: %s' % stdout.decode('utf-8'))
+                        self.err('   ... STDERR: %s' % stderr.decode('utf-8'))
 
         if totalcode == 0:
             # remove changes files and the files referenced:
