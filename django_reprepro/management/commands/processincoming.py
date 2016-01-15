@@ -109,13 +109,11 @@ class Command(BaseCommand):
         arch = match.group('arch')
 
         p, created = BinaryPackage.objects.get_or_create(
-            package=package, name=name, dist=dist, defaults={
+            package=package, name=name, dist=dist, arch=arch, defaults={
                 'version': version,
-                'arch': arch,
             })
         if not created:
             p.version = version
-            p.arch = arch
             p.components.clear()
             p.save()
 
