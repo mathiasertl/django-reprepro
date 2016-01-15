@@ -167,8 +167,8 @@ class Command(BaseCommand):
                         self.record_binary_upload(deb, package, dist, components)
                 else:
                     self.err('   ... RETURN CODE: %s' % code)
-                    self.err('   ... STDOUT: %s' % stdout)
-                    self.err('   ... STDERR: %s' % stderr)
+                    self.err('   ... STDOUT: %s' % stdout.decode('utf-8'))
+                    self.err('   ... STDERR: %s' % stderr.decode('utf-8'))
             else:
                 debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
                 for deb in debs:
@@ -177,8 +177,8 @@ class Command(BaseCommand):
                         self.record_binary_upload(deb, package, dist, components)
                     else:
                         self.err('   ... RETURN CODE: %s' % code)
-                        self.err('   ... STDOUT: %s' % out)
-                        self.err('   ... STDERR: %s' % err)
+                        self.err('   ... STDOUT: %s' % out.decode('utf-8'))
+                        self.err('   ... STDERR: %s' % err.decode('utf-8'))
 
         if totalcode == 0:
             # remove changes files and the files referenced:
