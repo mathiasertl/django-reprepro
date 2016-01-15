@@ -33,7 +33,11 @@ from django_reprepro.models import BinaryPackage
 from django_reprepro.models import SourcePackage
 from django_reprepro.util import ChangesFile
 
-BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', ]
+# NOTE 2016-01-15: We add --ignore=surprisingbinary because of automatically generated
+#   -dbgsym packages, which are not included in the changes file. See
+#   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808558 for more info. This is fixed
+#   in reprepro 4.17.0.
+BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--ignore=surprisingbinary']
 
 
 class Command(BaseCommand):
