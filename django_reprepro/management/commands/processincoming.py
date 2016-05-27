@@ -81,15 +81,17 @@ class Command(BaseCommand):
         cmd = BASE_ARGS + ['removesrc', dist.name, pkg]
         return self.ex(*cmd)
 
-    def include(self, dist, component, changesfile):
+    def include(self, dist, components, changesfile):
         """Add a .changes file to the repository."""
 
-        cmd = BASE_ARGS + ['-C', component.name, 'include', dist.name, changesfile.path]
+        components = '|'.join([c.name for c in components])
+        cmd = BASE_ARGS + ['-C', components, 'include', dist.name, changesfile.path]
         return self.ex(*cmd)
 
-    def includedeb(self, dist, component, changes, deb):
+    def includedeb(self, dist, components, changes, deb):
         path = os.path.join(os.path.dirname(changes.path), deb)
-        cmd = BASE_ARGS + ['-C',  component.name, 'includedeb', dist.name, path]
+        components = '|'.join([c.name for c in components])
+        cmd = BASE_ARGS + ['-C',  components, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
     def record_source_upload(self, package, changes, dist, components):
@@ -159,31 +161,30 @@ class Command(BaseCommand):
 
         totalcode = 0
 
-        for component in components:
-            if arch == 'amd64':
-                code, stdout, stderr = self.include(dist, component, pkg)
+        if arch == 'amd64':
+            code, stdout, stderr = self.include(dist, components, pkg)
+            totalcode += code
+
+            if code == 0:
+                self.record_source_upload(package, pkg, dist, components)
+                for deb in pkg.binary_packages:
+                    self.record_binary_upload(deb, package, dist, components)
+            else:
+                self.err('   ... RETURN CODE: %s' % code)
+                self.err('   ... STDOUT: %s' % stdout.decode('utf-8'))
+                self.err('   ... STDERR: %s' % stderr.decode('utf-8'))
+        else:
+            debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
+            for deb in debs:
+                code, stdout, stderr = self.includedeb(dist, components, pkg, deb)
                 totalcode += code
 
                 if code == 0:
-                    self.record_source_upload(package, pkg, dist, components)
-                    for deb in pkg.binary_packages:
-                        self.record_binary_upload(deb, package, dist, components)
+                    self.record_binary_upload(deb, package, dist, components)
                 else:
                     self.err('   ... RETURN CODE: %s' % code)
                     self.err('   ... STDOUT: %s' % stdout.decode('utf-8'))
                     self.err('   ... STDERR: %s' % stderr.decode('utf-8'))
-            else:
-                debs = [f for f in pkg.binary_packages if f.endswith('_%s.deb' % arch)]
-                for deb in debs:
-                    code, stdout, stderr = self.includedeb(dist, component, pkg, deb)
-                    totalcode += code
-
-                    if code == 0:
-                        self.record_binary_upload(deb, package, dist, components)
-                    else:
-                        self.err('   ... RETURN CODE: %s' % code)
-                        self.err('   ... STDOUT: %s' % stdout.decode('utf-8'))
-                        self.err('   ... STDERR: %s' % stderr.decode('utf-8'))
 
         if totalcode == 0:
             # remove changes files and the files referenced:
