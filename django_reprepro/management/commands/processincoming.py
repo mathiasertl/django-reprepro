@@ -134,8 +134,11 @@ class Command(BaseCommand):
         package.save()
 
         # get list of components
-        components = package.components.order_by('name').filter(distribution=dist)
-        components.update(last_seen=timezone.now())
+        if package.all_components:
+            components = dist.components.filter(enabled=True)
+        else:
+            components = package.components.order_by('name').filter(distribution=dist)
+            components.update(last_seen=timezone.now())
         if self.verbose:
             print('%s: %s' % (dist, ', '.join([c.name for c in components])))
 
