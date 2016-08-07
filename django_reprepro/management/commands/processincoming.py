@@ -100,6 +100,7 @@ class Command(BaseCommand):
         if not created:
             p.version = version
             p.components.clear()
+            p.timestamp = timezone.now()
             p.save()
 
         p.components.add(*components)
@@ -119,6 +120,7 @@ class Command(BaseCommand):
         if not created:
             p.version = version
             p.components.clear()
+            p.timestamp = timezone.now()
             p.save()
 
         p.components.add(*components)
