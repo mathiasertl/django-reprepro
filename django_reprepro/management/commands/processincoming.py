@@ -198,14 +198,15 @@ class Command(BaseCommand):
     def handle_directory(self, path):
         dist, arch = os.path.basename(path).split('-', 1)
         dist = Distribution.objects.get(name=dist)
-        dist.last_seen = timezone.now()
-        dist.save()
 
         for f in [f for f in os.listdir(path) if f.endswith('.changes')]:
+            dist.last_seen = timezone.now()
             try:
                 self.handle_changesfile(os.path.join(path, f), dist, arch)
             except RuntimeError as e:
                 self.err(e)
+
+        dist.save()
 
     def handle_incoming(self, incoming):
         # A few safety checks:
