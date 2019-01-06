@@ -13,7 +13,7 @@
 
 from django.core.management.base import BaseCommand
 
-from django_reprepro.models import Package
+from ...models import Package
 
 
 class Command(BaseCommand):
