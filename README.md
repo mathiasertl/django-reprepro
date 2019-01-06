@@ -3,7 +3,8 @@
 ## Requirements
 
 * Tested with Python 3.5 or 3.7 (Python3 shipping with Debian Stretch and Buster)
-* Django 2.0 or Django 2.1
+* [Django](https://www.djangoproject.com/) 2.0 or Django 2.1
+* [reprepro](https://wiki.debian.org/DebianRepository/SetupWithReprepro) 5.1 or 5.2
 
 ## ChangeLog
 
