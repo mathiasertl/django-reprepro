@@ -1,5 +1,4 @@
-Django==1.10
-gnupg==2.0.2
-six==1.10.0
-pip>=8.1.2
-setuptools>=21.2.1
+# NOTE: setup.py contains the packages installed with setup.py install
+Django==2.1.5
+gnupg==2.3.1
+six==1.12.0
