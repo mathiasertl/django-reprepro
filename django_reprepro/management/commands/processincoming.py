@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # This file is part of django-reprepro (https://github.com/mathiasertl/django-reprepro).
 #
 # django-reprepro is free software: you can redistribute it and/or modify it under the terms of the
@@ -12,8 +10,6 @@
 #
 # You should have received a copy of the GNU General Public License along with django-reprepro.  If
 # not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import unicode_literals
 
 import os
 import re

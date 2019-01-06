@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # This file is part of django-reprepro (https://github.com/mathiasertl/django-reprepro).
 #
 # django-reprepro is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,7 +14,6 @@
 import os
 
 import gnupg
-import six
 
 
 class ChangesFile(dict):
@@ -52,9 +49,7 @@ class ChangesFile(dict):
         if not self.data.valid:
             raise RuntimeError("%s: GPG signature not valid" % self.path)
 
-        data = self.data.data
-        if six.PY3:
-            data = data.decode('utf-8')
+        data = self.data.data.decode('utf-8')
 
         last_field = None
         for line in data.strip().split("\n"):

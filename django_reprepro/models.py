@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # This file is part of django-reprepro (https://github.com/mathiasertl/django-reprepro).
 #
 # django-reprepro is free software: you can redistribute it and/or modify it under the terms of the
@@ -13,10 +11,7 @@
 # You should have received a copy of the GNU General Public License along with django-reprepro.  If
 # not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 
 from .constants import VENDOR_DEBIAN
@@ -28,7 +23,6 @@ VENDORS = (
 )
 
 
-@python_2_unicode_compatible
 class Component(models.Model):
     name = models.CharField(max_length=16, unique=True)
     enabled = models.BooleanField(default=True)
@@ -38,7 +32,6 @@ class Component(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Distribution(models.Model):
     name = models.CharField(max_length=16, unique=True)
     vendor = models.SmallIntegerField(choices=VENDORS)
@@ -52,7 +45,6 @@ class Distribution(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Package(models.Model):
     name = models.CharField(max_length=64, unique=True)
     last_seen = models.DateTimeField(null=True, blank=True)
@@ -74,7 +66,6 @@ class Package(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class SourcePackage(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     dist = models.ForeignKey(Distribution, on_delete=models.CASCADE)
@@ -87,7 +78,6 @@ class SourcePackage(models.Model):
         return '%s_%s' % (self.package.name, self.version)
 
 
-@python_2_unicode_compatible
 class BinaryPackage(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)  # name of the binary package
@@ -102,7 +92,6 @@ class BinaryPackage(models.Model):
         return '%s_%s_%s' % (self.name, self.version, self.arch)
 
 
-@python_2_unicode_compatible
 class IncomingDirectory(models.Model):
     location = models.CharField(max_length=64)
     enabled = models.BooleanField(default=True)

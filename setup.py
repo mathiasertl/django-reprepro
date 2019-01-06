@@ -9,7 +9,6 @@ from setuptools import setup
 install_requires = [
     'Django>=2.1',
     'gnupg>=2.3',
-    'six>=1.11'
 ]
 
 
