@@ -32,11 +32,13 @@ from ...util import ChangesFile
 #   -dbgsym packages, which are not included in the changes file. See
 #   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808558 for more info. This is fixed
 #   in reprepro 4.17.0.
-BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--ignore=surprisingbinary']
+# NOTE 2018-01-14: Add --ignore=wrongdistribution because packages now always name "unstable"
+#   in the changelog.
+BASE_ARGS = ['reprepro', '-b', '/var/www/apt.fsinf.at/', '--ignore=surprisingbinary',
+             '--ignore=wrongdistribution']
 
 
 class Command(BaseCommand):
-    args = ''
     help = 'Process incoming files'
 
     def add_arguments(self, parser):
