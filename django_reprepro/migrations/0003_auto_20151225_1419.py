@@ -3,7 +3,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
+    atomic = False
     dependencies = [
         ('django_reprepro', '0002_auto_20151225_1348'),
     ]
