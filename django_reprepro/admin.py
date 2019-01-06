@@ -17,12 +17,13 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
+from .models import BinaryPackage
 from .models import Component
 from .models import Distribution
 from .models import IncomingDirectory
 from .models import Package
-from .models import BinaryPackage
 from .models import SourcePackage
+
 
 @admin.register(Component)
 class ComponentAdmin(admin.ModelAdmin):
@@ -35,7 +36,7 @@ class ComponentAdmin(admin.ModelAdmin):
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
     list_display = ('name', 'vendor', 'last_seen', 'supported_until')
-    list_filter= ('vendor', )
+    list_filter = ('vendor', )
     ordering = ('name', )
     readonly_fields = ('last_seen', )
 
@@ -46,7 +47,7 @@ class SourcePackageInline(admin.TabularInline):
     readonly_fields = ('timestamp', 'version', 'dist', 'components')
     ordering = ('-dist__released', )
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj):
         return False
 
     def has_delete_permission(self, request, obj):
@@ -59,7 +60,7 @@ class BinaryPackageInline(admin.TabularInline):
     readonly_fields = ('timestamp', 'name', 'version', 'arch', 'dist', 'components')
     ordering = ('-dist__released', 'name', 'arch', )
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj):
         return False
 
     def has_delete_permission(self, request, obj):

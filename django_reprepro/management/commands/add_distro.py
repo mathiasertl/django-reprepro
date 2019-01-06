@@ -13,11 +13,13 @@
 # You should have received a copy of the GNU General Public License along with django-reprepro.  If
 # not, see <http://www.gnu.org/licenses/>.
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
 
-from distribution.models import Component
-from distribution.models import Distribution
-from distribution.models import VENDORS
+from ...models import VENDORS
+from ...models import Component
+from ...models import Distribution
+
 
 class Command(BaseCommand):
     args = '<vendor> <codename>'

@@ -13,11 +13,9 @@
 # You should have received a copy of the GNU General Public License along with django-reprepro.  If
 # not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 import os
-import gnupg
 
+import gnupg
 import six
 
 
@@ -75,7 +73,7 @@ class ChangesFile(dict):
                 self[field] = value
         self['Architecture'] = self['Architecture'].split()
 
-        self._parsed=True
+        self._parsed = True
 
     def exists(self):
         """Check if all files referenced by this package exist."""

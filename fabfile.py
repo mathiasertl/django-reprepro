@@ -13,15 +13,12 @@
 # You should have received a copy of the GNU General Public License along with django-reprepro.  If
 # not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 import os
-
-from six.moves import configparser
 
 from fabric.api import local
 from fabric.context_managers import quiet
 from fabric.tasks import Task
+from six.moves import configparser
 
 config = configparser.ConfigParser({
     'remote': 'origin',
@@ -30,6 +27,7 @@ config = configparser.ConfigParser({
     'group': '',
 })
 config.read('fab.conf')
+
 
 class DeployTask(Task):
     def __init__(self, section='DEFAULT', **kwargs):
@@ -92,5 +90,6 @@ class DeployTask(Task):
         self.sudo('git pull %s %s' % (remote, branch))
         self.sudo('%s install -U -r requirements.txt' % pip)
         self.sudo('%s install -U mysqlclient' % pip)
+
 
 deploy = DeployTask()

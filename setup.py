@@ -3,8 +3,8 @@
 import subprocess
 import sys
 
-from setuptools import setup
 from setuptools import Command
+from setuptools import setup
 
 install_requires = [
     'Django>=2.1',

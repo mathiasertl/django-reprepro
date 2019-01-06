@@ -18,20 +18,19 @@ from __future__ import unicode_literals
 import os
 import re
 import time
-
-from subprocess import Popen
 from subprocess import PIPE
+from subprocess import Popen
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from django_reprepro.models import Distribution
-from django_reprepro.models import IncomingDirectory
-from django_reprepro.models import Package
-from django_reprepro.models import BinaryPackage
-from django_reprepro.models import SourcePackage
-from django_reprepro.util import ChangesFile
+from ...models import BinaryPackage
+from ...models import Distribution
+from ...models import IncomingDirectory
+from ...models import Package
+from ...models import SourcePackage
+from ...util import ChangesFile
 
 # NOTE 2016-01-15: We add --ignore=surprisingbinary because of automatically generated
 #   -dbgsym packages, which are not included in the changes file. See
@@ -47,10 +46,11 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--dry-run', action='store_true', default=False,
                             help="Don't really add any files.")
-        parser.add_argument('--prerm', default='',
-            help="Coma-seperated list of source packages to remove before "\
-                    "adding them. Necessary for source packages that build"\
-                    "several binary packages with new versions."
+        parser.add_argument(
+            '--prerm', default='',
+            help="Coma-seperated list of source packages to remove before "
+                 "adding them. Necessary for source packages that build"
+                 "several binary packages with new versions."
         )
         parser.add_argument('--norm', default=False, action='store_true',
                             help="Don't remove files after adding them to the repository.")
@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
     def includedeb(self, dist, component, changes, deb):
         path = os.path.join(os.path.dirname(changes.path), deb)
-        cmd = BASE_ARGS + ['-C',  component.name, 'includedeb', dist.name, path]
+        cmd = BASE_ARGS + ['-C', component.name, 'includedeb', dist.name, path]
         return self.ex(*cmd)
 
     def record_source_upload(self, package, changes, dist, components):

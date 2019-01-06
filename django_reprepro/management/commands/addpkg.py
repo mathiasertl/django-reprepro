@@ -17,9 +17,8 @@ import sys
 
 from django.core.management.base import BaseCommand
 
-from distribution.models import Component
-
-from package.models import Package
+from ...models import Component
+from ...models import Package
 
 
 class Command(BaseCommand):
