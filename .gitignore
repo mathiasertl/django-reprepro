@@ -12,3 +12,5 @@
 db.sqlite3
 packagearchive/localsettings.py
 /fab.conf
+/.tox
+*.egg-info/
