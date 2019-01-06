@@ -1,0 +1,14 @@
+dist: xenial
+language: python
+python:  # https://devguide.python.org/#status-of-python-branches
+  - "3.5"
+  - "3.6"
+  - "3.7"
+env:
+  - DJANGO=2.1.5
+  - DJANGO=2.0.9
+install:
+  - pip install -U pip setuptools
+  - pip install -r requirements-dev.txt gnupg==2.3.1 Django==$DJANGO
+script:
+  - python setup.py code_quality
