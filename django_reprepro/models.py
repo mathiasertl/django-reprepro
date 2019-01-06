@@ -76,8 +76,8 @@ class Package(models.Model):
 
 @python_2_unicode_compatible
 class SourcePackage(models.Model):
-    package = models.ForeignKey(Package)
-    dist = models.ForeignKey(Distribution)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    dist = models.ForeignKey(Distribution, on_delete=models.CASCADE)
     components = models.ManyToManyField(Component)
 
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -89,9 +89,9 @@ class SourcePackage(models.Model):
 
 @python_2_unicode_compatible
 class BinaryPackage(models.Model):
-    package = models.ForeignKey(Package)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)  # name of the binary package
-    dist = models.ForeignKey(Distribution)
+    dist = models.ForeignKey(Distribution, on_delete=models.CASCADE)
     components = models.ManyToManyField(Component)
 
     timestamp = models.DateTimeField(auto_now_add=True)
