@@ -22,7 +22,7 @@ class QualityCommand(Command):
         pass
 
     def run(self):
-        checked = ['packagearchive', 'django_reprepro', 'fabfile.py', 'setup.py', ]
+        checked = ['packagearchive', 'django_reprepro', 'setup.py', ]
         print('isort --check-only --diff -rc %s' % ' '.join(checked))
         status = subprocess.call(['isort', '--check-only', '--diff', '-rc', ] + checked)
         if status != 0:
