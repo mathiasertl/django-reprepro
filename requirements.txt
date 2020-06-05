@@ -1,3 +1,3 @@
 # NOTE: setup.py contains the packages installed with setup.py install
-Django==2.2.3
+Django==2.2.13
 gnupg==2.3.1
